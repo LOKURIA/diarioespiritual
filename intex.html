@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bloc Espiritual Protegido</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background-image: url('https://images.unsplash.com/photo-1520174698649-fd2f9b1e6524?auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      color: #333;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .oscuro {
+      background-color: #111 !important;
+      color: #eee;
+    }
+
+    .contenedor {
+      background-color: rgba(255, 255, 255, 0.92);
+      max-width: 800px;
+      margin: 70px auto;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    body.oscuro .contenedor {
+      background-color: rgba(30, 30, 30, 0.95);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 34px;
+      color: #4b0082;
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      background-color: #eee;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tab-btn.active {
+      background-color: #4b0082;
+      color: white;
+    }
+
+    textarea {
+      width: 100%;
+      height: 300px;
+      padding: 15px;
+      font-size: 18px;
+      border: 2px solid #aaa;
+      border-radius: 10px;
+      resize: vertical;
+      background: #fffefc;
+    }
+
+    .gato {
+      position: absolute;
+      bottom: -30px;
+      right: -40px;
+      width: 120px;
+      opacity: 0.9;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .acciones {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <audio autoplay loop hidden>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_277beb68c2.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="contenedor">
+    <h1>🔮 Mi Bloc Espiritual</h1>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="cambiarSeccion('afirmaciones')">🪷 Afirmaciones</button>
+      <button class="tab-btn" onclick="cambiarSeccion('suenos')">💭 Sueños</button>
+      <button class="tab-btn" onclick="cambiarSeccion('ideas')">💡 Ideas</button>
+    </div>
+
+    <textarea id="bloc" placeholder="Escribe lo que sientas..."></textarea>
+
+    <div class="acciones">
+      <button onclick="descargarNota()">📄 Descargar en PDF</button>
+
+      <div class="switch">
+        <label for="modoOscuro">🌙 Modo oscuro</label>
+        <input type="checkbox" id="modoOscuro" onchange="alternarModoOscuro()">
+      </div>
+    </div>
+
+    <img class="gato" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Black_Cat_Vector.svg/512px-Black_Cat_Vector.svg.png" alt="Gato negro espiritual">
+  </div>
+
+  <footer>Hecho con amor, magia y protección ✨</footer>
+
+  <script>
+    const textarea = document.getElementById('bloc');
+    const botones = document.querySelectorAll('.tab-btn');
+    const modoOscuroToggle = document.getElementById('modoOscuro');
+    let seccionActual = 'afirmaciones';
+
+    function cargarContenido() {
+      const textoGuardado = localStorage.getItem('nota_' + seccionActual);
+      textarea.value = textoGuardado || '';
+    }
+
+    textarea.addEventListener('input', () => {
+      localStorage.setItem('nota_' + seccionActual, textarea.value);
+    });
+
+    function cambiarSeccion(seccion) {
+      seccionActual = seccion;
+      botones.forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[onclick="cambiarSeccion('${seccion}')"]`).classList.add('active');
+      cargarContenido();
+    }
+
+    function alternarModoOscuro() {
+      document.body.classList.toggle('oscuro');
+    }
+
+    function descargarNota() {
+      const blob = new Blob([textarea.value], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `nota_${seccionActual}.txt`;
+      link.click();
+    }
+
+    function solicitarContrasena() {
+      const clave = prompt("🔐 Por favor, introduce tu contraseña para acceder:");
+      if (clave !== "miproteccion123") {
+        alert("Acceso denegado. Esta libreta está protegida.");
+        document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;color:red;'>⛔ Acceso denegado</h2>";
+      }
+    }
+
+    solicitarContrasena();
+    cargarContenido();
+  </script>
+
+</body>
+</html>
